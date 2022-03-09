@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class Graph {
   File aeroports;
   File vols;
+  HashMap<String ,Aeroport> listeAeroport;
 
 
   public Graph(File aeroports, File vols) throws FileNotFoundException {
@@ -23,7 +24,7 @@ public class Graph {
         maLigneAeroport = strCurrentLine.split(",", 6);
         Aeroport nouveauAeroport = new Aeroport(maLigneAeroport[0],maLigneAeroport[1],maLigneAeroport[2],maLigneAeroport[3],
             Double.parseDouble(maLigneAeroport[4]),Double.parseDouble(maLigneAeroport[5]));
-
+        listeAeroport.put(nouveauAeroport.getCodeIATA(),nouveauAeroport);
       }
     }catch (Exception e){
       throw new FileNotFoundException();
