@@ -2,18 +2,27 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Graph {
   File aeroports;
   File vols;
   HashMap<String ,Aeroport> listeAeroport;
+  HashMap<String, Set<Vol>> outputFlights;
+
 
 
   public Graph(File aeroports, File vols) throws FileNotFoundException {
     this.aeroports = aeroports;
     this.vols = vols;
+    listeAeroport = new HashMap<String ,Aeroport>();
+    outputFlights = new HashMap<String ,Set<Vol>>();
     try{
       BufferedReader objReaderAeroport = new BufferedReader(new FileReader(aeroports.toString()));
       BufferedReader objReaderVols = new BufferedReader(new FileReader(vols.toString()));
@@ -25,13 +34,21 @@ public class Graph {
         maLigneAeroport = strCurrentLine.split(",", 6);
         Aeroport nouveauAeroport = new Aeroport(maLigneAeroport[0],maLigneAeroport[1],maLigneAeroport[2],maLigneAeroport[3],
             Double.parseDouble(maLigneAeroport[4]),Double.parseDouble(maLigneAeroport[5]));
+        System.out.println(nouveauAeroport);
         listeAeroport.put(nouveauAeroport.getCodeIATA(),nouveauAeroport);
+        outputFlights.put(nouveauAeroport.getCodeIATA(), new HashSet<Vol>());
       }
       while((strCurrentLine = objReaderVols.readLine()) != null){
         maLigneVol = strCurrentLine.split(",",3);
         Vol nouveauVol = new Vol(maLigneVol[0],maLigneVol[1],maLigneVol[2]);
+        String source = maLigneVol[1];
+        HashSet<Vol> voles = (HashSet<Vol>) outputFlights.get(source);
+        voles.add(nouveauVol);
+        outputFlights.put(source, voles);
+
       }
     }catch (Exception e){
+      e.printStackTrace();
       throw new FileNotFoundException();
     }
 
@@ -42,6 +59,12 @@ public class Graph {
 
  void calculerItineraireMinimisantNombreVol(String src , String dest){
   //parcour par niveau breadth first search
+   Queue<String> file = new ArrayDeque<>();
+   boolean trouve = false;
+   file.add(src);
+   while (file!= null && trouve==false){
+
+   }
  }
 
  void calculerItineraireMinimisantDistance(String src, String dest){
