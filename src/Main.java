@@ -8,7 +8,7 @@ public class Main {
 			Graph g = new Graph(aeroports,vols);
 			g.calculerItineraireMinimisantNombreVol("BRU", "CHC");
 			System.out.println("-----------------");
-			g.calculerItineraireMiniminantDistance("BRU", "CHC");
+			g.calculerItineraireMinimisantDistance("BRU", "CHC");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

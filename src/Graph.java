@@ -18,6 +18,7 @@ public class Graph {
       BufferedReader objReaderVols = new BufferedReader(new FileReader(vols.toString()));
       String strCurrentLine;
       String[] maLigneAeroport;
+      String[] maLigneVol;
 
       while ((strCurrentLine = objReaderAeroport.readLine()) != null) {
         maLigneAeroport = strCurrentLine.split(",", 6);
@@ -25,18 +26,24 @@ public class Graph {
             Double.parseDouble(maLigneAeroport[4]),Double.parseDouble(maLigneAeroport[5]));
 
       }
+      while((strCurrentLine = objReaderVols.readLine()) != null){
+        maLigneVol = strCurrentLine.split(",",3);
+        Vol nouveauVol = new Vol(maLigneVol[0],maLigneVol[1],maLigneVol[2]);
+      }
     }catch (Exception e){
       throw new FileNotFoundException();
     }
 
 
+
+
   }
 
  void calculerItineraireMinimisantNombreVol(String src , String dest){
-
+  //parcour par niveau breadth first search
  }
 
- void calculerItineraireMiniminantDistance(String src, String dest){
-
+ void calculerItineraireMinimisantDistance(String src, String dest){
+  //algo the dijkstra
  }
 }
