@@ -83,5 +83,16 @@ public class Graph {
 
  void calculerItineraireMinimisantDistance(String src, String dest){
   //algo the dijkstra
+   Map etiquetteFactultative = new HashMap<String, Double>();
+   Map etiquetteDefinitive = new HashMap<String, Double>();
+   Map origine = new HashMap<String, Vol>();
+   Aeroport aeroportSrc = this.listeAeroport.get(src);
+   Aeroport aeroportDts = this.listeAeroport.get(dest);
+
+   for(Vol v : outputFlights.get(src)){
+     double distance = Util.distance(aeroportSrc.latitude,aeroportSrc.longitude,aeroportDts.latitude,aeroportDts.longitude);
+     etiquetteFactultative.put(v.iataDestination,distance);
+   }
+   etiquetteDefinitive.put(src,0.0);
  }
 }
