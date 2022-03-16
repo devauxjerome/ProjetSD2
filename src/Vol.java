@@ -20,4 +20,13 @@ public class Vol {
     public String getIataDestination() {
         return iataDestination;
     }
+
+    @Override
+    public String toString() {
+        return "Vol{" +
+            "companie='" + companie + '\'' +
+            ", iataSource='" + iataSource + '\'' +
+            ", iataDestination='" + iataDestination + '\'' +
+            '}';
+    }
 }

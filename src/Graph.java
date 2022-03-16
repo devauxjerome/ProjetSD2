@@ -2,14 +2,21 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.sql.SQLOutput;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Stack;
+import javax.sound.midi.Soundbank;
 
 public class Graph {
   File aeroports;
@@ -35,7 +42,7 @@ public class Graph {
         maLigneAeroport = strCurrentLine.split(",", 6);
         Aeroport nouveauAeroport = new Aeroport(maLigneAeroport[0],maLigneAeroport[1],maLigneAeroport[2],maLigneAeroport[3],
             Double.parseDouble(maLigneAeroport[4]),Double.parseDouble(maLigneAeroport[5]));
-        System.out.println(nouveauAeroport);
+        //System.out.println(nouveauAeroport);
         listeAeroport.put(nouveauAeroport.getCodeIATA(),nouveauAeroport);
         outputFlights.put(nouveauAeroport.getCodeIATA(), new HashSet<Vol>());
       }
@@ -60,16 +67,19 @@ public class Graph {
 
  void calculerItineraireMinimisantNombreVol(String src , String dest){
   //parcour par niveau breadth first search
-   Queue<String> file = new ArrayDeque<String>();
-   Stack<Vol> volsParLesquelsOnPasse = new Stack<>();
+   Deque<String> file = new ArrayDeque<String>();
+   Set<String> mesPassages = new HashSet<>();
+   HashMap<String, Vol> mesOrigines = new HashMap<>(); //String = IataDest
    boolean trouve = false;
    file.add(src);
 
    while (file!= null && trouve==false){
-     HashSet<Vol> vols= outputFlights.get(file.poll());
+     HashSet<Vol> vols= outputFlights.get(file.pop());
      for (Vol vol: vols ){
        String aeroportDest=vol.getIataDestination();
-       if (!file.contains(aeroportDest)){
+       if (!mesPassages.contains(aeroportDest)){
+         mesPassages.add(aeroportDest);
+         mesOrigines.put(aeroportDest, vol);
          if (aeroportDest.equals(dest)){
            trouve = true;
          } else {
@@ -79,6 +89,22 @@ public class Graph {
 
      }
    }
+   List<Vol> maListedeVol = new ArrayList<>();
+   boolean fini = false;
+   String aeroportSrc = dest;
+   while (!fini) {
+     Vol monVol = mesOrigines.get(aeroportSrc);
+     maListedeVol.add(monVol);
+     aeroportSrc = monVol.getIataSource();
+     if (aeroportSrc.equals(src)) {
+       fini = true;
+     }
+   }
+   Collections.reverse(maListedeVol);
+   for (Vol vol: maListedeVol){
+     System.out.println(vol);
+   }
+
  }
 
  void calculerItineraireMinimisantDistance(String src, String dest){
