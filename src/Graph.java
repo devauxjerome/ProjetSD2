@@ -9,12 +9,13 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.Stack;
 
 public class Graph {
   File aeroports;
   File vols;
   HashMap<String ,Aeroport> listeAeroport;
-  HashMap<String, Set<Vol>> outputFlights;
+  HashMap<String, HashSet<Vol>> outputFlights;
 
 
 
@@ -22,7 +23,7 @@ public class Graph {
     this.aeroports = aeroports;
     this.vols = vols;
     listeAeroport = new HashMap<String ,Aeroport>();
-    outputFlights = new HashMap<String ,Set<Vol>>();
+    outputFlights = new HashMap<String ,HashSet<Vol>>();
     try{
       BufferedReader objReaderAeroport = new BufferedReader(new FileReader(aeroports.toString()));
       BufferedReader objReaderVols = new BufferedReader(new FileReader(vols.toString()));
@@ -42,7 +43,7 @@ public class Graph {
         maLigneVol = strCurrentLine.split(",",3);
         Vol nouveauVol = new Vol(maLigneVol[0],maLigneVol[1],maLigneVol[2]);
         String source = maLigneVol[1];
-        HashSet<Vol> voles = (HashSet<Vol>) outputFlights.get(source);
+        HashSet<Vol> voles = outputFlights.get(source);
         voles.add(nouveauVol);
         outputFlights.put(source, voles);
 
@@ -59,11 +60,24 @@ public class Graph {
 
  void calculerItineraireMinimisantNombreVol(String src , String dest){
   //parcour par niveau breadth first search
-   Queue<String> file = new ArrayDeque<>();
+   Queue<String> file = new ArrayDeque<String>();
+   Stack<Vol> volsParLesquelsOnPasse = new Stack<>();
    boolean trouve = false;
    file.add(src);
-   while (file!= null && trouve==false){
 
+   while (file!= null && trouve==false){
+     HashSet<Vol> vols= outputFlights.get(file.poll());
+     for (Vol vol: vols ){
+       String aeroportDest=vol.getIataDestination();
+       if (!file.contains(aeroportDest)){
+         if (aeroportDest.equals(dest)){
+           trouve = true;
+         } else {
+           file.add(aeroportDest);
+         }
+       }
+
+     }
    }
  }
 
