@@ -86,13 +86,29 @@ public class Graph {
    Map etiquetteFactultative = new HashMap<String, Double>();
    Map etiquetteDefinitive = new HashMap<String, Double>();
    Map origine = new HashMap<String, Vol>();
-   Aeroport aeroportSrc = this.listeAeroport.get(src);
+   Aeroport aeroportTemoin = this.listeAeroport.get(src);
    Aeroport aeroportDts = this.listeAeroport.get(dest);
 
-   for(Vol v : outputFlights.get(src)){
-     double distance = Util.distance(aeroportSrc.latitude,aeroportSrc.longitude,aeroportDts.latitude,aeroportDts.longitude);
-     etiquetteFactultative.put(v.iataDestination,distance);
+   //mettre la source a 0 car origin
+   etiquetteDefinitive.put(aeroportTemoin.codeIATA,0.0);
+   while(!etiquetteDefinitive.containsKey(dest)) { //TODO bonus verifier cas particulier pas acces
+     for (Vol v : outputFlights.get(aeroportTemoin.codeIATA)) {
+       double distance = Util.distance(aeroportTemoin.latitude, aeroportTemoin.longitude, listeAeroport.get(v.iataDestination).latitude, listeAeroport.get(v.iataDestination).longitude);
+       distance += (double) etiquetteDefinitive.get(aeroportTemoin.codeIATA);
+       if (distance < (double) etiquetteFactultative.get(v.iataDestination)) {
+         etiquetteFactultative.put(v.iataDestination, distance);
+       }
+     }
+     Set<String> aeroports = etiquetteFactultative.keySet();
+     double minimum = Double.MAX_VALUE;
+     for(String s : aeroports){
+       if((double)etiquetteFactultative.get(s) < minimum){
+         minimum = (double)etiquetteFactultative.get(s);
+       }
+     }
+     //TODO mettre a jour ettiquette definitive
    }
-   etiquetteDefinitive.put(src,0.0);
+
+
  }
 }
