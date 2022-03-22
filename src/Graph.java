@@ -109,30 +109,52 @@ public class Graph {
 
  void calculerItineraireMinimisantDistance(String src, String dest){
   //algo the dijkstra
-   Map etiquetteFactultative = new HashMap<String, Double>();
-   Map etiquetteDefinitive = new HashMap<String, Double>();
+   Map etiquettesProvisoires = new HashMap<String, Double>();
+   Map etiquettesDefinitives = new HashMap<String, Double>();
    Map origine = new HashMap<String, Vol>();
-   Aeroport aeroportTemoin = this.listeAeroport.get(src);
-   Aeroport aeroportDts = this.listeAeroport.get(dest);
+   Aeroport aeroportBaladeur = this.listeAeroport.get(src);
+   Aeroport aeroportDst = this.listeAeroport.get(dest);
+   double distanceParcouru = 0.0;
+
+   /**
+    * prendre minimum
+    * remplir ettiquette provisoire
+    *   comparer valeur et distance deja parcouru + distance voisin
+    * ajouter dans etiquette definitive
+    *   suppr. etiquette provisoir
+    *   ajouter distance deja parcouru
+    *   ajouter origine
+   **/
+
+
+
 
    //mettre la source a 0 car origin
-   etiquetteDefinitive.put(aeroportTemoin.codeIATA,0.0);
-   while(!etiquetteDefinitive.containsKey(dest)) { //TODO bonus verifier cas particulier pas acces
-     for (Vol v : outputFlights.get(aeroportTemoin.codeIATA)) {
-       double distance = Util.distance(aeroportTemoin.latitude, aeroportTemoin.longitude, listeAeroport.get(v.iataDestination).latitude, listeAeroport.get(v.iataDestination).longitude);
-       distance += (double) etiquetteDefinitive.get(aeroportTemoin.codeIATA);
-       if (distance < (double) etiquetteFactultative.get(v.iataDestination)) {
-         etiquetteFactultative.put(v.iataDestination, distance);
-       }
-     }
-     Set<String> aeroports = etiquetteFactultative.keySet();
+   etiquettesProvisoires.put(aeroportBaladeur.codeIATA, distanceParcouru);
+
+   //boucle : choisir plus petit et mettre voisin
+   while(!etiquettesProvisoires.isEmpty() && !etiquettesDefinitives.containsKey(dest)) {
+
+     Set<String> aeroports = etiquettesProvisoires.keySet();
      double minimum = Double.MAX_VALUE;
+     String aeroportMin = null;
      for(String s : aeroports){
-       if((double)etiquetteFactultative.get(s) < minimum){
-         minimum = (double)etiquetteFactultative.get(s);
+       if((double)etiquettesProvisoires.get(s) < minimum){
+         minimum = (double)etiquettesProvisoires.get(s);
+         aeroportMin = s;
        }
      }
-     //TODO mettre a jour ettiquette definitive
+
+     for (Vol v : outputFlights.get(aeroportBaladeur.codeIATA)) {
+       double distance = Util.distance(aeroportBaladeur.latitude, aeroportBaladeur.longitude, listeAeroport.get(v.iataDestination).latitude, listeAeroport.get(v.iataDestination).longitude);
+       distance += (double) etiquettesDefinitives.get(aeroportBaladeur.codeIATA);
+       if (distance < (double) etiquettesProvisoires.get(v.iataDestination)) {
+         etiquettesProvisoires.put(v.iataDestination, distance);
+       }
+     }
+
+     etiquettesDefinitives.put(aeroportBaladeur.codeIATA, distanceParcouru + (double)etiquettesProvisoires.get(aeroportBaladeur.codeIATA));
+
    }
 
 
