@@ -145,15 +145,21 @@ public class Graph {
        }
      }
 
+     aeroportBaladeur = this.listeAeroport.get(aeroportMin);
+
      for (Vol v : outputFlights.get(aeroportBaladeur.codeIATA)) {
+       //calcule distance entre voisin
        double distance = Util.distance(aeroportBaladeur.latitude, aeroportBaladeur.longitude, listeAeroport.get(v.iataDestination).latitude, listeAeroport.get(v.iataDestination).longitude);
+       //calcule distance entre origine et voisin
        distance += (double) etiquettesDefinitives.get(aeroportBaladeur.codeIATA);
-       if (distance < (double) etiquettesProvisoires.get(v.iataDestination)) {
+       //remplacer si distance inferieurs
+       if (!etiquettesProvisoires.containsKey(v.iataDestination) || distance < (double)etiquettesProvisoires.get(v.iataDestination)) {
          etiquettesProvisoires.put(v.iataDestination, distance);
+         origine.put(aeroportBaladeur.codeIATA, v);
        }
      }
 
-     etiquettesDefinitives.put(aeroportBaladeur.codeIATA, distanceParcouru + (double)etiquettesProvisoires.get(aeroportBaladeur.codeIATA));
+     etiquettesDefinitives.put(aeroportBaladeur.codeIATA, (double)etiquettesProvisoires.get(aeroportBaladeur.codeIATA));
 
    }
 
