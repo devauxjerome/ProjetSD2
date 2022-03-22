@@ -146,6 +146,7 @@ public class Graph {
      }
 
      aeroportBaladeur = this.listeAeroport.get(aeroportMin);
+     etiquettesProvisoires.remove(aeroportBaladeur.codeIATA);
 
      for (Vol v : outputFlights.get(aeroportBaladeur.codeIATA)) {
        //calcule distance entre voisin
@@ -153,7 +154,7 @@ public class Graph {
        //calcule distance entre origine et voisin
        distance += (double) etiquettesDefinitives.get(aeroportBaladeur.codeIATA);
        //remplacer si distance inferieurs
-       if (!etiquettesProvisoires.containsKey(v.iataDestination) || distance < (double)etiquettesProvisoires.get(v.iataDestination)) {
+       if (!etiquettesDefinitives.containsKey(v.iataDestination) && (!etiquettesProvisoires.containsKey(v.iataDestination) || distance < (double)etiquettesProvisoires.get(v.iataDestination))) {
          etiquettesProvisoires.put(v.iataDestination, distance);
          origine.put(aeroportBaladeur.codeIATA, v);
        }
