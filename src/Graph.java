@@ -130,8 +130,8 @@ public class Graph {
 
 
    //mettre la source a 0 car origin
-   etiquettesProvisoires.put(aeroportBaladeur.codeIATA, distanceParcouru);
-
+   etiquettesProvisoires.put(aeroportBaladeur.getCodeIATA(), distanceParcouru);
+   origine.put(aeroportBaladeur.getCodeIATA(), null);
    //boucle : choisir plus petit et mettre voisin
    while(!etiquettesProvisoires.isEmpty() && !etiquettesDefinitives.containsKey(dest)) {
 
@@ -146,15 +146,15 @@ public class Graph {
      }
 
      aeroportBaladeur = this.listeAeroport.get(aeroportMin);
-     distanceParcouru = (double) etiquettesProvisoires.remove(aeroportBaladeur.codeIATA);
+     distanceParcouru = (double) etiquettesProvisoires.remove(aeroportBaladeur.getCodeIATA());
 
-     for (Vol v : outputFlights.get(aeroportBaladeur.codeIATA)) {
+     for (Vol v : outputFlights.get(aeroportBaladeur.getCodeIATA())) {
        //calcule distance entre voisin
-       double distance = Util.distance(aeroportBaladeur.latitude, aeroportBaladeur.longitude, listeAeroport.get(v.iataDestination).latitude, listeAeroport.get(v.iataDestination).longitude);
+       double distance = Util.distance(aeroportBaladeur.getLatitude(), aeroportBaladeur.getLongitude(), listeAeroport.get(v.iataDestination).getLatitude(), listeAeroport.get(v.iataDestination).getLongitude());
        //calcule distance entre origine et voisin
        distance += distanceParcouru;
        //remplacer si distance inferieurs
-       if (!etiquettesDefinitives.containsKey(v.iataDestination) && (!etiquettesProvisoires.containsKey(v.iataDestination) || distance < (double)etiquettesProvisoires.get(v.iataDestination))) {
+       if (!etiquettesDefinitives.containsKey(v.getIataDestination()) && (!etiquettesProvisoires.containsKey(v.getIataDestination()) || distance < (double)etiquettesProvisoires.get(v.getIataDestination()))) {
          origine.put(v.iataDestination,v);
          etiquettesProvisoires.put(v.iataDestination, distance);
        }
@@ -164,22 +164,19 @@ public class Graph {
    }
 
    //affichage chemin
-   System.out.print(etiquettesDefinitives.get(dest));
+   System.out.println("distance : "+etiquettesDefinitives.get(dest));
 
    List<Vol> maListedeVol = new ArrayList<>();
-   boolean fini = false;
-   String aeroportSrc = dest;
-   while (!fini) {
-     Vol monVol = (Vol) origine.get(aeroportSrc);
+   String aeroportBld = dest;
+   Vol monVol = (Vol) origine.get(dest);
+   while (!monVol.getIataSource().equals(src)) {
+     monVol = (Vol) origine.get(aeroportBld);
      maListedeVol.add(monVol);
-     aeroportSrc = monVol.getIataSource();
-     if (aeroportSrc.equals(src)) {
-       fini = true;
-     }
+     aeroportBld = monVol.getIataSource();
    }
    Collections.reverse(maListedeVol);
-   for (Vol vol: maListedeVol){
-     System.out.println(vol);
+   for (Vol v: maListedeVol){
+     System.out.println("Vol [source="+listeAeroport.get(v.iataSource).getName()+", destination="+listeAeroport.get(v.iataDestination).getName()+",\nairline="+v.getCompanie()+", distance="+Util.distance(listeAeroport.get(v.iataSource).getLatitude(), listeAeroport.get(v.iataSource).getLongitude(), listeAeroport.get(v.iataDestination).getLatitude(), listeAeroport.get(v.iataDestination).getLongitude())+"]");
    }
 
 
