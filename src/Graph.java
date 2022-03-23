@@ -155,13 +155,31 @@ public class Graph {
        distance += distanceParcouru;
        //remplacer si distance inferieurs
        if (!etiquettesDefinitives.containsKey(v.iataDestination) && (!etiquettesProvisoires.containsKey(v.iataDestination) || distance < (double)etiquettesProvisoires.get(v.iataDestination))) {
+         origine.put(v.iataDestination,v);
          etiquettesProvisoires.put(v.iataDestination, distance);
-         origine.put(aeroportBaladeur.codeIATA, v);
        }
      }
-
      etiquettesDefinitives.put(aeroportBaladeur.codeIATA, distanceParcouru);
 
+   }
+
+   //affichage chemin
+   System.out.print(etiquettesDefinitives.get(dest));
+
+   List<Vol> maListedeVol = new ArrayList<>();
+   boolean fini = false;
+   String aeroportSrc = dest;
+   while (!fini) {
+     Vol monVol = (Vol) origine.get(aeroportSrc);
+     maListedeVol.add(monVol);
+     aeroportSrc = monVol.getIataSource();
+     if (aeroportSrc.equals(src)) {
+       fini = true;
+     }
+   }
+   Collections.reverse(maListedeVol);
+   for (Vol vol: maListedeVol){
+     System.out.println(vol);
    }
 
 
