@@ -146,13 +146,13 @@ public class Graph {
      }
 
      aeroportBaladeur = this.listeAeroport.get(aeroportMin);
-     etiquettesProvisoires.remove(aeroportBaladeur.codeIATA);
+     distanceParcouru = (double) etiquettesProvisoires.remove(aeroportBaladeur.codeIATA);
 
      for (Vol v : outputFlights.get(aeroportBaladeur.codeIATA)) {
        //calcule distance entre voisin
        double distance = Util.distance(aeroportBaladeur.latitude, aeroportBaladeur.longitude, listeAeroport.get(v.iataDestination).latitude, listeAeroport.get(v.iataDestination).longitude);
        //calcule distance entre origine et voisin
-       distance += (double) etiquettesDefinitives.get(aeroportBaladeur.codeIATA);
+       distance += distanceParcouru;
        //remplacer si distance inferieurs
        if (!etiquettesDefinitives.containsKey(v.iataDestination) && (!etiquettesProvisoires.containsKey(v.iataDestination) || distance < (double)etiquettesProvisoires.get(v.iataDestination))) {
          etiquettesProvisoires.put(v.iataDestination, distance);
@@ -160,7 +160,7 @@ public class Graph {
        }
      }
 
-     etiquettesDefinitives.put(aeroportBaladeur.codeIATA, (double)etiquettesProvisoires.get(aeroportBaladeur.codeIATA));
+     etiquettesDefinitives.put(aeroportBaladeur.codeIATA, distanceParcouru);
 
    }
 
