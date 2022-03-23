@@ -101,10 +101,20 @@ public class Graph {
      }
    }
    Collections.reverse(maListedeVol);
+   String sortietemp ="";
+   double distancetot = 0;
    for (Vol vol: maListedeVol){
-     System.out.println(vol);
-   }
+     Aeroport aeroportsrc = listeAeroport.get(vol.getIataSource());
+     Aeroport aeroportdest = listeAeroport.get(vol.getIataDestination());
+     double dist = Util.distance(aeroportsrc.latitude, aeroportsrc.longitude, aeroportdest.latitude, aeroportdest.longitude);
+     distancetot += dist;
+     sortietemp += "Vol [source=" + aeroportsrc.name + ", destination=" + aeroportdest.name + ", airline=" +
+         vol.getCompanie() + "; distance=" +
+         dist + "]\n";
 
+   }
+   System.out.println(distancetot);
+   System.out.println(sortietemp);
  }
 
  void calculerItineraireMinimisantDistance(String src, String dest){
