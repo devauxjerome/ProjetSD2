@@ -89,6 +89,9 @@ public class Graph {
 
      }
    }
+   if(file.isEmpty() && !trouve){
+     throw new IllegalArgumentException("La destination est inatteignable de l'aeroport "+listeAeroport.get(src).getName());
+   }
    List<Vol> maListedeVol = new ArrayList<>();
    boolean fini = false;
    String aeroportSrc = dest;
@@ -161,6 +164,9 @@ public class Graph {
      }
      etiquettesDefinitives.put(aeroportBaladeur.codeIATA, distanceParcouru);
 
+   }
+   if(etiquettesProvisoires.isEmpty() && !etiquettesDefinitives.containsKey(dest)){
+     throw new IllegalArgumentException("La destination est inatteignable de l'aeroport "+listeAeroport.get(src).getName());
    }
 
    //affichage chemin
