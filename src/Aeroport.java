@@ -1,10 +1,10 @@
 public class Aeroport {
-  String codeIATA;
-  String name;
-  String ville;
-  String pays;
-  double longitude;
-  double latitude;
+  private String codeIATA;
+  private String name;
+  private String ville;
+  private String pays;
+  private double longitude;
+  private double latitude;
 
   public Aeroport(String codeIATA, String name, String ville, String pays, double longitude,
       double latitude) {

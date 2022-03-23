@@ -102,9 +102,9 @@ public class Graph {
    for (Vol vol: maListedeVol){
      Aeroport aeroportsrc = listeAeroport.get(vol.getIataSource());
      Aeroport aeroportdest = listeAeroport.get(vol.getIataDestination());
-     double dist = Util.distance(aeroportsrc.latitude, aeroportsrc.longitude, aeroportdest.latitude, aeroportdest.longitude);
+     double dist = Util.distance(aeroportsrc.getLatitude(), aeroportsrc.getLongitude(), aeroportdest.getLatitude(), aeroportdest.getLongitude());
      distancetot += dist;
-     sortietemp += "Vol [source=" + aeroportsrc.name + ", destination=" + aeroportdest.name + ", airline=" +
+     sortietemp += "Vol [source=" + aeroportsrc.getName() + ", destination=" + aeroportdest.getName() + ", airline=" +
          vol.getCompanie() + "; distance=" +
          dist + "]\n";
 
@@ -138,14 +138,14 @@ public class Graph {
      distanceParcouru = (double) etiquettesProvisoires.remove(aeroportBaladeur.getCodeIATA());
 
      for (Vol v : outputFlights.get(aeroportBaladeur.getCodeIATA())) {
-       double distance = Util.distance(aeroportBaladeur.getLatitude(), aeroportBaladeur.getLongitude(), listeAeroport.get(v.iataDestination).getLatitude(), listeAeroport.get(v.iataDestination).getLongitude());
+       double distance = Util.distance(aeroportBaladeur.getLatitude(), aeroportBaladeur.getLongitude(), listeAeroport.get(v.getIataDestination()).getLatitude(), listeAeroport.get(v.getIataDestination()).getLongitude());
        distance += distanceParcouru;
        if (!etiquettesDefinitives.containsKey(v.getIataDestination()) && (!etiquettesProvisoires.containsKey(v.getIataDestination()) || distance < (double)etiquettesProvisoires.get(v.getIataDestination()))) {
-         origine.put(v.iataDestination,v);
-         etiquettesProvisoires.put(v.iataDestination, distance);
+         origine.put(v.getIataDestination(),v);
+         etiquettesProvisoires.put(v.getIataDestination(), distance);
        }
      }
-     etiquettesDefinitives.put(aeroportBaladeur.codeIATA, distanceParcouru);
+     etiquettesDefinitives.put(aeroportBaladeur.getCodeIATA(), distanceParcouru);
 
    }
    if(etiquettesProvisoires.isEmpty() && !etiquettesDefinitives.containsKey(dest)){
@@ -164,9 +164,7 @@ public class Graph {
    }
    Collections.reverse(maListedeVol);
    for (Vol v: maListedeVol){
-     System.out.println("Vol [source="+listeAeroport.get(v.iataSource).getName()+", destination="+listeAeroport.get(v.iataDestination).getName()+",\nairline="+v.getCompanie()+", distance="+Util.distance(listeAeroport.get(v.iataSource).getLatitude(), listeAeroport.get(v.iataSource).getLongitude(), listeAeroport.get(v.iataDestination).getLatitude(), listeAeroport.get(v.iataDestination).getLongitude())+"]");
+     System.out.println("Vol [source="+listeAeroport.get(v.getIataSource()).getName()+", destination="+listeAeroport.get(v.getIataDestination()).getName()+",\nairline="+v.getCompanie()+", distance="+Util.distance(listeAeroport.get(v.getIataSource()).getLatitude(), listeAeroport.get(v.getIataSource()).getLongitude(), listeAeroport.get(v.getIataDestination()).getLatitude(), listeAeroport.get(v.getIataDestination()).getLongitude())+"]");
    }
-
-
  }
 }

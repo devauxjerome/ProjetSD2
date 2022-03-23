@@ -1,7 +1,7 @@
 public class Vol {
-    String companie;
-    String iataSource;
-    String iataDestination;
+    private String companie;
+    private String iataSource;
+    private String iataDestination;
 
     public Vol(String companie, String iataSource, String iataDestination) {
         this.companie = companie;
